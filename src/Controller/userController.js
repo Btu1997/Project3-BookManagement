@@ -39,6 +39,16 @@ const isValidRequestBody = function(requestBody) {
 };
 
 
+
+
+
+
+// -------------------------------------------------------- REGEX ---------------------------------------------------------
+const nameRegex = /^[ a-z ]+$/i
+const mobileRegex = /^[6-9]\d{9}$/
+const emailRegex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/
+
+
 const createUser = async function(req, res) {
     try {
         const userData = req.body
