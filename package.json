@@ -1,0 +1,22 @@
+{
+  "name": "project-booksmanagementgroup15",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ashanka710/project-booksManagementGroup15.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ashanka710/project-booksManagementGroup15/issues"
+  },
+  "homepage": "https://github.com/ashanka710/project-booksManagementGroup15#readme",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
