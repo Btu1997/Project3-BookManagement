@@ -1,20 +1,20 @@
 const jwt = require("jsonwebtoken")
- const UserModel = require("../Model/userModel")
+const UserModel = require("../Model/userModel")
 
 
- const login = async function (req, res) {
+const login = async function(req, res) {
     try {
         let email = req.body.email
         let password = req.body.password
         let data = req.body
-        
+
         //=====================Checking the validation=====================//
         if (Object.keys(data).length == 0) return res.status(400).send({ status: false, msg: "Email and Password Required !" })
 
         //=====================Validation of EmailID=====================//
         if (!email) return res.status(400).send({ status: false, msg: "email is required" })
 
-        
+
         if (!password) return res.status(400).send({ status: false, msg: "password is required" })
         if (password.length < 8 || password.length > 15) { return res.status(400).send({ status: false, message: "Password should be of minimum 8 characters & maximum 15 characters" }) }
         const user = await UserModel.findOne({ email: email, password: password })
@@ -23,12 +23,11 @@ const jwt = require("jsonwebtoken")
             userId: user._id.toString(),
             batch: "plutonium",
 
-        }, "this is a private key",{expiresIn:'1d'})
+        }, "this is a private key", { expiresIn: '1d' })
         res.setHeader("x-api-key", token)
 
-        res.status(200).send({ status: true, message: 'Success', data:token })
-    }
-    catch (error) {
+        res.status(200).send({ status: true, message: 'Success', data: token })
+    } catch (error) {
         return res.status(500).send({ status: false, msg: error.message })
     }
 }
@@ -58,7 +57,7 @@ const createUser = async function(req, res) {
         };
 
 
-        if (title !== "Mr" && title !== "Mrs" && title !== "Miss") return res.status(400).send({ status: false, data: "title should be Mr or Mrs or Miss" })
+        // if (title !== "Mr" && title !== "Mrs" && title !== "Miss") return res.status(400).send({ status: false, data: "title should be Mr or Mrs or Miss" })
 
         if (!name) {
             return res.status(400).send({ status: false, message: "name is required" })
