@@ -5,7 +5,11 @@ var validateEmail = function (email) {
     return re.test(email)
 };
 
+<<<<<<< HEAD:src/model/userModel.js
 const userSchema= new mongoose.Schema({
+=======
+const userSchema = new mongoose.Schema({
+>>>>>>> c59f832 (required dependencies done):src/Model/userModel.js
     title: {type: String, require :true, enum:["Mr", "Mrs", "Miss"],trim:true},
     name: {type: String, require :true, trim:true},
     phone: {type: String, require :true, unique:true, trim:true},
