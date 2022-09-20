@@ -1,7 +1,12 @@
 const jwt = require("jsonwebtoken")
 <<<<<<< HEAD
+<<<<<<< HEAD
 const userModel = require("../Model/userModel")
 const { valid, regForName, regForTitle, regForEmail, regForMobileNo, regForPassword, isValidRequestBody } = require("../Validator/validate")
+=======
+const userModel = require("../Model/userModel")
+const { valid, regForName, regForTitle, regForEmail, regForMobileNo, regForPassword, isValidRequestBody } = require("../validators/validator")
+>>>>>>> bb5f255 ( create Api)
 
 
 
@@ -13,7 +18,7 @@ const createUser = async function (req, res) {
 
         //===================== Checking the input value is Valid or Invalid =====================//
         if (!isValidRequestBody(data)) {
-            return res.status(400).send({ status: false, message: "Body is empty, please provied data" });
+            return res.status(400).send({ status: false, message: "Body is empty, please provide data" });
         }
 
 
@@ -53,8 +58,8 @@ const createUser = async function (req, res) {
         if (!regForPassword(password)) return res.status(400).send({ status: false, msg: "Please Enter Password With atleast one UpperCase,LowerCase,Number and special characters" })
 
         //=====================User Data Creation=====================//
-        const newUser = await userModel.create(data)
-        return res.status(201).send({ status: true, message: 'Success', newUser })
+        const createUser = await userModel.create(data)
+        return res.status(201).send({ status: true, message:'Success', data:createUser })
 
     } catch (error) {
         return res.status(500).send({ status: false, message: error.message })
@@ -147,8 +152,8 @@ const login = async function (req, res) {
 const login = async function(req, res) {
 >>>>>>> c59f832 (required dependencies done)
     try {
-        let email = req.body.email
-        let password = req.body.password
+        // let email = req.body.email
+        // let password = req.body.password
         let data = req.body
 
         //=====================Checking the validation=====================//
@@ -176,7 +181,7 @@ const login = async function(req, res) {
         const decode = jwt.verify(token, "this is a private key")
 
         res.setHeader("x-api-key", token)
-        console.log(decode)
+      //  console.log(decode)
         console.log(decode.exp)
         console.log(decode.iat)
         let expdate = new Date(parseInt(decode.exp) * 1000)
@@ -215,6 +220,7 @@ const login = async function(req, res) {
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 const isValidRequestBody = function(requestBody) {
     return Object.keys(requestBody).length > 0;
@@ -223,3 +229,6 @@ const isValidRequestBody = function(requestBody) {
 >>>>>>> c59f832 (required dependencies done)
 module.exports.createUser = createUser
 module.exports.login = login
+=======
+module.exports= {createUser, login};
+>>>>>>> bb5f255 ( create Api)
