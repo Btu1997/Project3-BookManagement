@@ -27,12 +27,53 @@ const createBooks = async function(req,res) {
        }
 }
 
-module.exports={createBooks};
 
+/////////////////////////////////////////////////////getBooks all /////////////////////////////////////////////////////////////////
+const getAllBook = async function(req, res) {
+    try {
+        const queryParams = req.query
+        if (queryParams.userId && !queryParams.userId.match(/^[0-9a-fA-F]{24}$/)) {
+            return res.status(400).send({ status: false, message: "Incorrect userId" })
+        }
+        let findBooks = await bookModel.find({...queryParams, isDeleted: false }).select({ title: 1, excerpt: 1, userId: 1, category: 1, releasedAt: 1, reviews: 1 })
 
+        findBooks.sort(function(a, b) {
+            return a.title.localeCompare(b.title)
+        })
+        if (findBooks && findBooks.length == 0) {
+            return res.status(404).send({ status: false, message: "Books not found" })
+        }
+        return res.status(200).send({ status: true, message: "Books list", data: findBooks })
+    } catch (error) {
+        return res.status(500).send({ status: false, message: error.message })
+    }
+}
+///////////////////////////////////////////////get books by path param//////////////////////////////////////////////////
+const getBooksByPathParam = async function (req, res) {
+    try {
+        let bookIDEntered = req.params.bookId
 
-      /*Create a book document from request body. Get userId in request body only.
-Make sure the userId is a valid userId by checking the user exist in the users collection.
-Return HTTP status 201 on a succesful book creation. Also return the book document. The response should be a JSON object like this
-Create atleast 10 books for each user
-Return HTTP status 400 for an invalid request with a response body*/
+        //===================== Checking the input value is Valid or Invalid =====================//
+    //    if (!isValidRequestBody(bookIDEntered)) return res.status(400).send({ status: false, message: "Body is empty, please provied data" });
+        if (!(bookIDEntered)) return res.status(400).send({ status: false, message: "Enter a book id" });
+
+        let dat = await bookModel.findById(bookIDEntered)
+
+        //===================== Checking Book Exsistance =====================//
+        if (!dat) return res.status(404).send({ status: false, message: 'Book Not Found' })
+
+        if (dat.isDeleted == true) return res.status(400).send({ status: false, message: `${dat.title} Book is deleted` })
+
+        //===================== Getting Reviews of Book =====================//
+        // let reviewsData = await reviewModel.find({ bookId: bookIDEntered })
+        let reviewsData =[]
+        let data = { dat, reviewsData: reviewsData }
+        return res.status(200).send({ status: true, message: 'Books list', data: data })
+    }
+    catch (error) {
+        return res.status(500).send({ status: false, message: error.message })
+    }
+
+}
+
+module.exports={createBooks,getAllBook,getBooksByPathParam};
