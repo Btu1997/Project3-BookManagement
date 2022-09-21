@@ -2,12 +2,14 @@
 const express = require('express');
 const router = express.Router();
 const {createUser,login} = require("../Controller/userController");
+const {createBooks} = require("../Controller/bookController");
+const {bookValidation} = require("../Validator/validate")
 
 router.post("/register", createUser);
 
 router.post("/login", login);
 
-
+router.post("/books",bookValidation, createBooks)
 
 router.all("/*", (req, res) => { res.status(404).send({ status: false, error: " / invalid - path params - provided / " }); });
 

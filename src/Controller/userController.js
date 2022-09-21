@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken")
-const userModel = require("../Model/userModel")
+const userModel = require("../model/userModel")
 const { valid, regForName, regForTitle, regForEmail, regForMobileNo, regForPassword, isValidRequestBody } = require("../Validator/validate")
 
 const createUser = async function (req, res) {
@@ -8,14 +8,14 @@ const createUser = async function (req, res) {
         const { title, name, phone, email, password, address } = data
 
         //===================== Checking the input value is Valid or Invalid =====================//
-        if (!isValidRequestBody(data)) {
-            return res.status(400).send({ status: false, message: "Body is empty, please provide data" });
-        }
+         if (!data) {
+        return res.status(400).send({ status: false, message: "Body is empty, please provide data" });
+         }
 
 
         //=====================Validation of Title=====================//
         if (!title) return res.status(400).send({ status: false, message: "title is required" })
-        if (!(valid(title))) return res.status(400).send({ status: false, msg: "Provide a valid title" })
+     //   if (!(valid(title))) return res.status(400).send({ status: false, msg: "Provide a valid title" })
         if (!regForTitle(title)) return res.status(400).send({ status: false, msg: "Enter Title as Mr or Miss or Mrs" })
 
         //=====================Validation of Name=====================//
@@ -63,7 +63,7 @@ const login = async function (req, res) {
         // let email = req.body.email
         // let password = req.body.password
         let data = req.body
-
+const {email,password} = data
         //=====================Checking the validation=====================//
         if (!isValidRequestBody(data)) return res.status(400).send({ status: false, msg: "Email and Password Required !" })
 
@@ -89,12 +89,12 @@ const login = async function (req, res) {
 
         res.setHeader("x-api-key", token)
       //  console.log(decode)
-        console.log(decode.exp)
-        console.log(decode.iat)
-        let expdate = new Date(parseInt(decode.exp) * 1000)
-        let iatdate = new Date(parseInt(decode.iat) * 1000)
-        console.log(expdate)
-        console.log(iatdate)
+       // console.log(decode.exp)
+        // console.log(decode.iat)
+        // let expdate = new Date(parseInt(decode.exp) * 1000)
+        // let iatdate = new Date(parseInt(decode.iat) * 1000)
+        // console.log(expdate)
+        // console.log(iatdate)
         res.status(200).send({ status: true, message: 'Success', data: token })
     }
     catch (error) {
