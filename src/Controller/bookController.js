@@ -128,5 +128,33 @@ const updateBookbyId = async function (req, res) {
         return res.status(500).send({ status: false, message: error.message });
     }
 };
+////////////////////////////////////////Deleted Books//////////////////////////////////////////////////////////////////
+const deletebyId = async function(req, res) {
 
-module.exports={createBooks,getAllBook,getBooksByPathParam,updateBookbyId};
+    try {
+        const bookId = req.query.bookId
+        if (!bookId) return res.status(400).send({
+            status: false,
+            message: "Enter a bookId"
+        })
+        let book = await bookModel.findById(bookId)
+        if (!book || book.isDeleted == true) {
+            return res.status(404).send({ status: false, message: "NO such book exist" })
+
+        };
+        if (req.token.userId != book.userId) {
+            return res.status(403).send({ status: false, message: "Not Authorised" })
+        }
+
+        await bookModel.findOneAndUpdate({ _id: bookId }, {
+            isDeleted: true,
+            deletedAt: new Date()
+        })
+        return res.status(200).send({ status: true, message: "Book deleted successfully" })
+    } catch (error) {
+        return res.status(500).send({ message, error: message })
+
+    }
+}
+
+module.exports={createBooks,getAllBook,getBooksByPathParam,updateBookbyId,deletebyId};
