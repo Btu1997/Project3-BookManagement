@@ -5,16 +5,23 @@ const moment = require("moment");
 const createBooks = async function(req,res) {
     try {
       let data = req.body;
+      let title = data["title"]
+      let ISBN = data["ISBN"]
       let CurrentDate = moment().format("DD MM YYYY hh:mm:ss");
 
       let userDetails = await userModel.findById(data["userId"]);
 
-      
       if (!userDetails) {
         return res.status(400).send({ status: false, msg: " User does not Exist." });
       }
-  
-      
+
+      let existBooks = await bookModel.findOne({title:title})
+      if(existBooks){
+        return res.status(409).send({status:false, msg:"title already in used Enter another title"})
+      }
+      if(existBooks["ISBN"]== ISBN ){
+        return res.status(409).send({status:false,msg:"ISBN already in used"}) }
+
       if (data["isdeleted"] == true) {
         data["deletedAt"] = CurrentDate;
       }

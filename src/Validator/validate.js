@@ -1,36 +1,56 @@
 const {mongoose}= require("mongoose")
 
-const valid = function (value) {
-    if (typeof value == "number" || typeof value == "undefined" || typeof value == null) { return false }
-    if (typeof value == "string" && value.trim().length == 0) { return false }
-    return true
+// const valid = function (value) {
+//     if (typeof value == "number" || typeof value == "undefined" || typeof value == null) { return false }
+//     if (typeof value == "string" && value.trim().length == 0) { return false }
+//     return true
+// }
+
+
+
+// //===================== Checking the input value with Regex =====================//
+// const regForName = function (value) { return (/^[A-Z][a-z]{1,}(?: [A-Z][a-z]+){0,}$/gm).test(value) }
+
+// const regForTitle = function (value) { return (/^(Mr|Mrs|Miss)+$\b/).test(value) }
+
+// const regForEmail = function (value) { return (/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/).test(value) }
+
+// const regForMobileNo = function (value) { return (/^((\+91)?|91)?[789][0-9]{9}$/g).test(value) }
+
+
+// const regForPassword= function (value) { return (/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()]).{8,15}$/).test(value) }
+
+// // const regForPassword= function (value) { return (/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,15}$/).test(value) }
+
+// // const regForPassword= function (value) { return (/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()])(?=\\S+$).{8, 15}$/).test(value) }
+
+// //=====================Module Export=====================//
+// //module.exports = { valid, regForName, regForTitle, regForEmail, regForMobileNo,regForPassword, isValidRequestBody}
+
+
+//===================================================function for validation============================================================
+const checkInputsPresent = (value) => { return (Object.keys(value).length > 0) };
+
+const isValidTitleA = function(title){
+    return["Mr", "Mrs", "Miss"].indexOf(title) !== -1
 }
 
-const isValidRequestBody = function(Body) {
-    return Object.keys(Body).length > 0;
-};
+const isValidName = function(body) {
+    const nameRegex = /^[a-zA-Z_ ]*$/
 
-//===================== Checking the input value with Regex =====================//
-const regForName = function (value) { return (/^[A-Z][a-z]{1,}(?: [A-Z][a-z]+){0,}$/gm).test(value) }
+    return nameRegex.test(body)
+}
 
-const regForTitle = function (value) { return (/^(Mr|Mrs|Miss)+$\b/).test(value) }
+const isvalidMobileNo = (number) => { return (/^(\+\d{1,3}[- ]?)?\d{10}$/.test(number)); }
 
-const regForEmail = function (value) { return (/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/).test(value) }
+const isValidEmail = function(value){
+    return /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/.test(value);
+}
 
-const regForMobileNo = function (value) { return (/^((\+91)?|91)?[789][0-9]{9}$/g).test(value) }
-
-
-const regForPassword= function (value) { return (/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()]).{8,15}$/).test(value) }
-
-// const regForPassword= function (value) { return (/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,15}$/).test(value) }
-
-// const regForPassword= function (value) { return (/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()])(?=\\S+$).{8, 15}$/).test(value) }
-
-//=====================Module Export=====================//
-//module.exports = { valid, regForName, regForTitle, regForEmail, regForMobileNo,regForPassword, isValidRequestBody}
-
-
-//===============================================================================================================
+const isValidPassword = function(Password){
+    const passRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,16}$/  
+    return passRegex.test(Password) 
+}
 
 const isValidTitle = function(body) {
     const nameRegex = /^[a-zA-Z_ ]*$/
@@ -38,64 +58,56 @@ const isValidTitle = function(body) {
     return nameRegex.test(body)
 }
 
-// const isValidTitle = function(title){
-//     return["Mr", "Mrs", "Miss"].indexOf(title) !== -1
-// }
-
-// const isValidPassword = function(Password){
-//     const passRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,16}$/
-//     return passRegex.test(Password) 
-// }
-
-// const isValidTag = function(title){
-//     return["Book", "Friends", "Self help"].indexOf(title) !== -1
-// }
-
 const isValidUserId = function(value){
     return mongoose.isValidObjectId(value)
 }
+//////////////////////////////////////User Validation///////////////////////////////////////////////////////////////
+const userValidation = function (req,res,next){
+    let userDetails = req.body;
+    if (!checkInputsPresent(req.body)) return res.status(400).send({ status: false, Error: "Body is Empty please provide details" });
 
-// const isValidEmail = function(email){
-//         return /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/.test(email);
+    let {title,name,phone,email,password}= {...userDetails}
+    
+    if ( !title ) { return res.status(400).send({ status: false, msg: "title is required" });}
+    if ( !name ) { return res.status(400).send({ status: false, msg: "name is required" });}
+    if ( !phone ) { return res.status(400).send({ status: false, msg: "phone is required" });}
+    if ( !email ) { return res.status(400).send({ status: false, msg: "email is required" });}
+    if ( !password ) { return res.status(400).send({ status: false, msg: "password is required" });}
 
-// }
+    let [Title,Name,Phone,Email,Password] = [isValidTitleA(title),isValidName(name),isvalidMobileNo(phone),isValidEmail(email),isValidPassword(password)]
+
+    if (!Title ) {return res.status(400).send({ status: false, message: "Enter valid Title" });
+      }
+      if (!Name ) {return res.status(400).send({ status: false, message: "Enter valid Name" });
+    }
+    if (!Phone ) {return res.status(400).send({ status: false, message: "Enter valid Phone" });
+      }
+    if (!Email ) {return res.status(400).send({ status: false, message: "Enter valid Email" });
+    }
+    if (!Password ) {return res.status(400).send({ status: false, message: "Enter valid Password" });
+      }
+      next();
+}
+
 ///////////////////////////////////////Book Validation///////////////////////////////////////////////////////////////
 
-let bookValidation= function (req,res,next){
+const bookValidation= function (req,res,next){
 
     let bookDetails = req.body;
     let {title, excerpt, userId, ISBN, category,subcategory} = {...bookDetails}
-
+    if (!checkInputsPresent(req.body)) return res.status(400).send({ status: false, Error: " Body is Empty please Enter details" });
    
-    if ( !title ) {
-        return res
-        .status(400)
-        .send({ status: false, msg: "title is required" });
+    if ( !title ) { return res.status(400) .send({ status: false, msg: "title is required" });
     }
-    if ( !excerpt ) {
-        return res
-        .status(400)
-        .send({ status: false, msg: "excerpt is required" });
+    if ( !excerpt ) {return res.status(400).send({ status: false, msg: "excerpt is required" });
     }
-    if ( !userId ) {
-        return res
-        .status(400)
-        .send({ status: false, msg: "userId is required" });
+    if ( !userId ) {return res.status(400).send({ status: false, msg: "userId is required" });
     }
-    if (!ISBN ) {
-            return res
-            .status(400)
-            .send({ status: false, msg: "ISBN is required" });
-        }
-         if (!category ) {
-        return res
-        .status(400)
-        .send({ status: false, msg: "category is required" });
+    if ( !ISBN ) {return res.status(400).send({ status: false, msg: "ISBN is required" });
     }
-    if (!subcategory ) {
-        return res
-        .status(400)
-        .send({ status: false, msg: "subcategory is required" });
+    if (!category ) {return res.status(400).send({ status: false, msg: "category is required" });
+    }
+    if (!subcategory ) {return res.status(400).send({ status: false, msg: "subcategory is required" });
     }
     
     
@@ -130,7 +142,7 @@ let bookValidation= function (req,res,next){
 
 
 
-module.exports={bookValidation,regForTitle,regForName,isValidRequestBody,regForEmail,regForMobileNo,regForPassword,valid};
+module.exports={userValidation,bookValidation,checkInputsPresent,isValidTitleA,isValidName,isvalidMobileNo,isValidEmail,isValidPassword,isValidTitle,isValidUserId}//regForTitle,regForName,regForEmail,regForMobileNo,regForPassword,valid};
 // const isEmailAlreadyUsed = await authorModel.findOne({ email }); 
 
 // if (isEmailAlreadyUsed) {
