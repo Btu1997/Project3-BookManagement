@@ -82,5 +82,51 @@ const getBooksByPathParam = async function (req, res) {
     }
 
 }
+///////////////////////////////////////Update books///////////////////////////////////////////////////////////////
+const updateBookbyId = async function (req, res) {
+    try {
+        let bookId = req.params.bookId;
 
-module.exports={createBooks,getAllBook,getBooksByPathParam};
+        let { title, excerpt, releasedAt, ISBN } = req.body
+        //=====================Checking the validation=====================//
+        if (!valid(bookId)) return res.status(400).send({ status: false, message: "Book Id is Invalid !!!!" })
+        if (Object.keys(req.body).length == 0) return res.status(400).send({ status: false, message: "please enter data in body" });
+
+        //===================== Checking Book Exsistance =====================//
+        let booksData = await bookModel.findOne({ _id: bookId, isDeleted: false })
+        if (!booksData) return res.status(404).send({ status: false, message: "No Books Found using BookID" })
+
+        //=====================Validation of title=====================//
+        if (title) {
+            if (!(/^[a-zA-Z0-9\s\-,?_.]+$/).test(title)) return res.status(400).send({ status: false, message: "format of title is wrong!!!" });
+            if (!valid(title)) return res.status(400).send({ status: false, message: "invalid title details" });
+            let findTitle = await bookModel.findOne({ title: title })
+            if (findTitle) return res.status(400).send({ status: false, message: "title already exist" })
+
+        }
+        //=====================Validation of ISBN=====================//
+        if (ISBN) {
+            if (!(/^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/).test(ISBN)) return res.status(400).send({ status: false, message: "enter valid ISBN number" });
+            let findISBN = await bookModel.findOne({ ISBN: ISBN })
+            if (findISBN) return res.status(400).send({ status: false, message: "ISBN already exist" })
+        }
+
+        //=====================Validation of releasedAt=====================//
+        if (releasedAt) {
+            if (!(/^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$/).test(releasedAt)) return res.status(400).send({ status: false, message: "date must be in format  YYYY-MM-DD!!!", });
+        }
+        //=====================Validation of excerpt=====================//
+        if (excerpt) {
+            if (!valid(excerpt)) return res.status(400).send({ status: false, message: "invalid excerpt details" });
+        }
+
+        //=====================Updating Bookd=====================//
+        let updatedBook = await bookModel.findByIdAndUpdate(bookId, req.body, { new: true })
+        return res.status(200).send({ status: true, data: updatedBook })
+
+    } catch (error) {
+        return res.status(500).send({ status: false, message: error.message });
+    }
+};
+
+module.exports={createBooks,getAllBook,getBooksByPathParam,updateBookbyId};

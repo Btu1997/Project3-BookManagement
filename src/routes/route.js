@@ -2,7 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const {createUser,login} = require("../Controller/userController");
-const {createBooks,getAllBook,getBooksByPathParam} = require("../Controller/bookController");
+const {createBooks,getAllBook,getBooksByPathParam,updateBookbyId} = require("../Controller/bookController");
 const {bookValidation,userValidation} = require("../Validator/validate")
 const {authentication,authorisation} = require("../middleware/auth")
 
@@ -14,7 +14,7 @@ router.post("/login", login);
 router.post("/books",bookValidation,authentication,authorisation, createBooks);
 router.get("/books",getAllBook);
 router.get("/books/:bookId",getBooksByPathParam);
-
+router.put("/books/:bookId",updateBookbyId);
 router.all("/*", (req, res) => { res.status(404).send({ status: false, error: " / invalid - path params - provided / " }); });
 
 
