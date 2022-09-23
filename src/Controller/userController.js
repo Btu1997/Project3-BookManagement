@@ -6,11 +6,12 @@ const createUser = async function (req, res) {
         const data = req.body
         const { title, name, phone, email, password, address } = data
          //=====================Checking the Duplication of Email=====================//
-       const existUser = await userModel.findOne({email:email } );
-     if(existUser){return res.status(400).send({ status: false, message: "email already exists!" })}
-      const newexistUser = await userModel.findOne({phone:phone } );
-        if(newexistUser){return res.status(409).send({status:false,msg:"phone no already in used"})}
-
+         const newexistUser = await userModel.findOne({phone:phone } );
+         if(newexistUser){return res.status(409).send({status:false,msg:"phone no already in used"})}
+ 
+         const existUser = await userModel.findOne({email:email } );
+        if(existUser){return res.status(400).send({ status: false, message: "email already exists!" })}
+     
         const createUser = await userModel.create(data)
         return res.status(201).send({ status: true, message:'Success', data:createUser })
 

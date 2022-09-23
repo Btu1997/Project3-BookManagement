@@ -11,11 +11,11 @@ router.post("/register",userValidation,createUser);
 
 router.post("/login", login);
 
-router.post("/books",bookValidation,authentication,authorisation, createBooks);
+router.post("/books",bookValidation, createBooks);
 router.get("/books",getAllBook);
 router.get("/books/:bookId",getBooksByPathParam);
-router.put("/books/:bookId",authentication,authorisation,updateBookbyId);
-router.delete("/books/:bookId",authentication,authorisation,deletebyId)
+router.put("/books/:bookId",updateBookbyId);
+router.delete("/books/:bookId",deletebyId)
 router.all("/*", (req, res) => { res.status(404).send({ status: false, error: " / invalid - path params - provided / " }); });
 
 

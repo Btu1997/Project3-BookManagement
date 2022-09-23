@@ -53,7 +53,7 @@ const isValidPassword = function(Password){
 }
 
 const isValidTitle = function(body) {
-    const nameRegex = /^[a-zA-Z_ ]*$/
+    const nameRegex = /^[A-Za-z0-9\s\-_,\.;?:()]+$/                    // {/^[a-zA-Z_ ]*$/}
 
     return nameRegex.test(body)
 }
@@ -66,7 +66,7 @@ const userValidation = function (req,res,next){
     let userDetails = req.body;
     if (!checkInputsPresent(req.body)) return res.status(400).send({ status: false, Error: "Body is Empty please provide details" });
 
-    let {title,name,phone,email,password}= {userDetails}
+    let {title,name,phone,email,password}= {...userDetails}
     
     if ( !title ) { return res.status(400).send({ status: false, msg: "title is required" });}
     if ( !name ) { return res.status(400).send({ status: false, msg: "name is required" });}
