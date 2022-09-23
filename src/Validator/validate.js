@@ -147,7 +147,7 @@ const bookValidation= function (req,res,next){
 
 
 
-module.exports={userValidation,bookValidation,checkInputsPresent,isValidTitleA,isValidName,isvalidMobileNo,isValidEmail,isValidPassword,isValidTitle,isValidUserId}//regForTitle,regForName,regForEmail,regForMobileNo,regForPassword,valid};
+module.exports={userValidation,bookValidation,checkInputsPresent,isValidTitleA,isValidName,isvalidMobileNo,isValidEmail,isValidPassword,isValidTitle,isValidUserId,valid}//regForTitle,regForName,regForEmail,regForMobileNo,regForPassword,valid};
 // const isEmailAlreadyUsed = await authorModel.findOne({ email }); 
 
 // if (isEmailAlreadyUsed) {
