@@ -19,7 +19,8 @@ const createBooks = async function(req,res) {
       if(existBooks){
         return res.status(409).send({status:false, msg:"title already in used Enter another title"})
       }
-      if(existBooks["ISBN"]== ISBN ){
+      let newexistBooks = await bookModel.findOne({ISBN:ISBN})
+      if(newexistBooks ){
         return res.status(409).send({status:false,msg:"ISBN already in used"}) }
 
       if (data["isdeleted"] == true) {

@@ -7,11 +7,10 @@ const createUser = async function (req, res) {
         const { title, name, phone, email, password, address } = data
          //=====================Checking the Duplication of Email=====================//
        const existUser = await userModel.findOne({email:email } );
-    //    if (existUser["phone"]==data["phone"]){ return res.status(400).send({ status: false, message: "phone already exists!" })};
-    //    if(existUser["email"]== data["email"]) {return res.status(400).send({ status: false, message: "email already exists!" })};
-      if(existUser){return res.status(400).send({ status: false, message: "email already exists!" })}
+     if(existUser){return res.status(400).send({ status: false, message: "email already exists!" })}
       const newexistUser = await userModel.findOne({phone:phone } );
         if(newexistUser){return res.status(409).send({status:false,msg:"phone no already in used"})}
+
         const createUser = await userModel.create(data)
         return res.status(201).send({ status: true, message:'Success', data:createUser })
 
@@ -67,12 +66,15 @@ const login = async function (req, res) {
         let data = req.body
         const {email,password} = data
         //=====================Checking the validation=====================//
-        if (!isValidRequestBody(data)) return res.status(400).send({ status: false, msg: "Email and Password Required !" })
-
+        const checkInputsPresent = (value) => { return (Object.keys(value).length > 0) };
+        if (!checkInputsPresent(data)) return res.status(400).send({ status: false, Error: "Body is Empty please provide details" });
         //=====================Validation of EmailID=====================//
         if (!email) return res.status(400).send({ status: false, msg: "email is required" })
-        if (!regForEmail(email)) return res.status(400).send({ status: false, msg: "Please Enter Valid Email ID" })
-
+        const isValidEmail = function(value){
+            return /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/.test(value);
+        }
+       let getEmail= isValidEmail(email)
+       if(!getEmail)return res.status(400).send({status:false,msg:"email is not valid"})
         //=====================Validation of Password=====================//
         if (!password) return res.status(400).send({ status: false, msg: "password is required" })
 
