@@ -61,6 +61,11 @@ const isValidTitle = function(body) {
 const isValidUserId = function(value){
     return mongoose.isValidObjectId(value)
 }
+
+const valid = function (value) {
+  if (typeof value == "number" || typeof value == "undefined" || typeof value == null) { return false }
+  if (typeof value == "string" && value.trim().length == 0) { return false }
+  return true}
 //////////////////////////////////////User Validation///////////////////////////////////////////////////////////////
 const userValidation = function (req,res,next){
     let userDetails = req.body;

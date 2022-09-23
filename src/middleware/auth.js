@@ -1,15 +1,25 @@
 const jwt = require("jsonwebtoken")
 const bookModel = require("../model/bookModel")
 
-const authentication = async function (req, res, next) {
+const  authentication = function (req, res, next) {
     try {
         let token = req.headers["x-api-key"];
-        if (!token) return res.status(400).send({ status: false, msg: "login is required" })
-        let decodedtoken = jwt.verify(token, "this is a private key")
-        if (!decodedtoken) return res.status(401).send({ status: false, msg: "token is invalid" })
+        if (!token) return res.send({ status: false, msg: "token must be present" });
+
+        // let decodedtoken = jwt.verify(token, "this is a private key");
+        jwt.verify(token, "this is a private key", { ignoreExpiration:true }, //avoid the invalid error
+         function (err, decodedtoken) {
+            if (err) return res.status(401).send({ status: false, message: "Token is invalid" });
+            if (Date.now() > decodedtoken.exp * 1000) 
+                return res .status(401).send({ status: false, message: "Token expired" })
+
+        // if (!decodedtoken) return res.send({ status: false, msg: "invalid token" })
+    
         req.loggedInUser=decodedtoken.userId
+     
         next()
-    }
+         })
+    } 
     catch (error) {
         console.log(error)
         return res.status(500).send({ msg: error.message })

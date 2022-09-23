@@ -18,64 +18,21 @@ const createUser = async function (req, res) {
     } catch (error) {
         return res.status(500).send({ status: false, message: error.message })
     }
-}
-    
-    
-        //    let duplicateEmail = await userModel.findOne({ email: email });
-    //    if (duplicateEmail) return res.status(400).send({ status: false, message: "Email already exists!" });
-        
-        //===================== Checking the input value is Valid or Invalid =====================//
-        
-
-        //=====================Validation of Title=====================//
-     //   if (!(valid(title))) return res.status(400).send({ status: false, msg: "Provide a valid title" })
-      //  if (!regForTitle(title)) return res.status(400).send({ status: false, msg: "Enter Title as Mr or Miss or Mrs" })
-
-        //=====================Validation of Name=====================//
-
-       // if (!name) return res.status(400).send({ status: false, message: "Name is required" })
-        //if (!(valid(name))) return res.status(400).send({ status: false, msg: "Enter Valid Name" })
-        //if (!regForName(name)) return res.status(400).send({ status: false, msg: "Enter Valid Name in Alphabets" })
-
-        //=====================Validation of Phone=====================//
-        //if (!phone) return res.status(400).send({ status: false, message: "phone is required" })
-        //if (!(valid(phone))) return res.status(400).send({ status: false, msg: "Provide a valid phone" })
-        //if (!regForMobileNo(phone)) return res.status(400).send({ status: false, msg: "Enter Valid Indian Number Starting with +91 or 91 followed by 10 Numbers or else enter 10 Numbers Starting with 7 or 8 or 9" })
-
-        //=====================Checking the Duplication of Phone Number=====================//
-        //let duplicateMobile = await userModel.findOne({ phone: phone });
-        //if (duplicateMobile) return res.status(400).send({ status: false, message: "Mobile No. already exists!" });
-
-        //=====================Validation of Email=====================//
-       // if (!email) return res.status(400).send({ status: false, message: "Email is required" })
-      //  if (!(valid(email))) return res.status(400).send({ status: false, msg: "Provide a valid Email" })
-       // if (!regForEmail(email)) return res.status(400).send({ status: false, msg: "Enter Valid Email" })
-
-       
-
-        //=====================Validation of Password=====================//
-        // if (!password) return res.status(400).send({ status: false, message: "phone is required" })
-        // if (!(valid(password))) return res.status(400).send({ status: false, msg: "Provide a valid password" })
-        // if (!regForPassword(password)) return res.status(400).send({ status: false, msg: "Please Enter Password With atleast one UpperCase,LowerCase,Number and special characters" })
-
-        //=====================User Data Creation=====================//
-       
-
-
+}   
+////////////////////////////////////////////login part////////////////////////////////////////////////////////////////////
 const login = async function (req, res) {
     try {
+        // let email = req.body.email
+        // let password = req.body.password
         let data = req.body
-        const {email,password} = data
+const {email,password} = data
         //=====================Checking the validation=====================//
-        const checkInputsPresent = (value) => { return (Object.keys(value).length > 0) };
-        if (!checkInputsPresent(data)) return res.status(400).send({ status: false, Error: "Body is Empty please provide details" });
+        if (!data) return res.status(400).send({ status: false, msg: "Email and Password Required !" })
+
         //=====================Validation of EmailID=====================//
         if (!email) return res.status(400).send({ status: false, msg: "email is required" })
-        const isValidEmail = function(value){
-            return /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/.test(value);
-        }
-       let getEmail= isValidEmail(email)
-       if(!getEmail)return res.status(400).send({status:false,msg:"email is not valid"})
+        
+
         //=====================Validation of Password=====================//
         if (!password) return res.status(400).send({ status: false, msg: "password is required" })
 
@@ -86,19 +43,24 @@ const login = async function (req, res) {
         //===================== Creating Token Using JWT =====================//
         const token = jwt.sign({
             userId: user._id.toString(),
-            batch: "plutonium",
-        }, "this is a private key", { expiresIn: '1d' })
+            batch: "plutonium",iat:Math.floor(Date.now()/1000)
+            ,exp:Math.floor(Date.now()/1000)+60*60*24
+        }, "this is a private key")
 
         //===================== Decode Token Using JWT =====================//
         const decode = jwt.verify(token, "this is a private key")
 
         res.setHeader("x-api-key", token)
       
-        res.status(200).send({ status: true, message: 'Success', data: token })
+         let expdate = new Date(parseInt(decode.exp) * 1000)
+         let iatdate = new Date(parseInt(decode.iat) * 1000)
+      
+        res.status(200).send({ status: true, message: 'Success', data: token,exp:expdate,iat:iatdate })
     }
     catch (error) {
         return res.status(500).send({ status: false, message: error.message })
     }
 }
+
 
 module.exports= {createUser, login};
