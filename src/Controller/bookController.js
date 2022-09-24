@@ -140,7 +140,7 @@ const updateBookbyId = async function(req, res) {
 const deletebyId = async function(req, res) {
 
     try {
-        const bookId = req.query.bookId
+        const bookId = req.params.bookId
         if (!bookId) return res.status(400).send({
             status: false,
             message: "Enter a bookId"
