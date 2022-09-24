@@ -207,7 +207,7 @@ const bookValidation = function(req, res, next) {
 
 
 module.exports = { userValidation, bookValidation, checkInputsPresent, isValidTitleA, isValidName, isvalidMobileNo, isValidEmail, isValidPassword, isValidTitle, isValidUserId, isvalidISBN } //regForTitle,regForName,regForEmail,regForMobileNo,regForPassword,valid};
-    // const isEmailAlreadyUsed = await authorModel.findOne({ email }); 
+
 
 // if (isEmailAlreadyUsed) {
 //     return res.status(400).send({ status: false, message: `email address is already registered` })
