@@ -35,7 +35,7 @@ const authorisation = async function (req, res, next) {
         let toBeupdatedbookId = req.params.bookId
         if (toBeupdatedbookId) {
 
-            let updatinguserId = await bookModel.findbyId({ _id: toBeupdatedbookId }).select({ userId: 1, _id: 0 })
+            let updatinguserId = await bookModel.findById({ _id: toBeupdatedbookId }).select({ userId: 1, _id: 0 })
             let userId = updatinguserId.userId
 
             // let id = decodedtoken.userId

@@ -1,8 +1,8 @@
 const bookModel = require("../model/bookModel");
 const userModel = require("../model/userModel");
 const moment = require("moment");
-const {valid}= require("../Validator/validate");
-
+const {mongoose, isValidObjectId}= require("mongoose");
+const {valid}= require("../Validator/validate")
 
 const createBooks = async function(req, res) {
     try {
@@ -65,21 +65,18 @@ const getBooksByPathParam = async function(req, res) {
 
 
             //===================== Checking the input value is Valid or Invalid =====================//
-            //    if (!isValidRequestBody(bookIDEntered)) return res.status(400).send({ status: false, message: "Body is empty, please provied data" });
+          
             if (!(bookIDEntered)) return res.status(400).send({ status: false, message: "Enter a book id" });
-
-            if (bookIDEntered.match(/^[0-9a-fA-F]{24}$/)) {
-                return res.status(400).send({ status: false, message: "Incorrect bookId" })
-            }
-            // if (!bookIDEntered.bookId.match(/^[0-9a-fA-F]{24}$/)) {
-            //     return res.status(400).send({ status: false, message: "Incorrect bookId" })
-            // }
+           
+            const ValidId= isValidObjectId(bookIDEntered)
+            if(!ValidId){return res.status(400).send({status:false, message:"Enter valid BookId"})}
+           
             let dat = await bookModel.findById(bookIDEntered)
 
             //===================== Checking Book Exsistance =====================//
             if (!dat) return res.status(404).send({ status: false, message: 'Book Not Found' })
 
-            if (dat.isDeleted == true) return res.status(400).send({ status: false, message: `${dat.title} Book is deleted` })
+            if (dat.isDeleted == true) return res.status(400).send({ status: false, message: `${dat.title} This Book is deleted` })
 
             //===================== Getting Reviews of Book =====================//
             // let reviewsData = await reviewModel.find({ bookId: bookIDEntered })
@@ -98,7 +95,9 @@ const updateBookbyId = async function(req, res) {
 
         let { title, excerpt, releasedAt, ISBN } = req.body
             //=====================Checking the validation=====================//
-        if (!valid(bookId)) return res.status(400).send({ status: false, message: "Book Id is Invalid !!!!" })
+      //  if (!valid(bookId)) return res.status(400).send({ status: false, message: "Book Id is Invalid !!!!" })
+      const ValidId= isValidObjectId(bookId)
+      if(!ValidId){return res.status(400).send({status:false, message:"Book Id is Invalid"})}
         if (Object.keys(req.body).length == 0) return res.status(400).send({ status: false, message: "please enter data in body" });
 
         //===================== Checking Book Exsistance =====================//
