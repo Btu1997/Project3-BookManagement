@@ -39,9 +39,9 @@ const createReview = async function (req, res) {
         if(!review){ return res.status(400).send({ status: false, message: "review is required" })}
          if(!(/^[A-Za-z -.]+$/).test(review)){return res.status(400).send({status:true,message:"review must be in charter "})}
         if(!data.reviewedAt){return res.status(400).send({ status: false, message: "reviewed is required" })}
-        if(isValidreleasedAt(data.reviewedAt)){ data.reviewedAt=Date.now() }
-        else{
-            
+        if((data.reviewedAt)){
+            validReview=isValidreleasedAt(data.reviewedAt)
+            if(!validReview){return res.status(400).send({status:false,msg:"ReleasedAt should be Current Date and formate is yyyy-mm-dd"})}
         }
        
         let updatedBook = await bookModel.findOneAndUpdate({ _id: id }, { $inc: { reviews: +1 } }, { new: true })
