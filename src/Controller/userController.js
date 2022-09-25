@@ -50,6 +50,7 @@ const login = async function(req, res) {
 
         //===================== Decode Token Using JWT =====================//
         const decode = jwt.verify(token, "this is a private key")
+      
 
         res.setHeader("x-api-key", token)
 

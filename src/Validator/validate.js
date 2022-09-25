@@ -206,7 +206,7 @@ const bookValidation = function(req, res, next) {
 
 
 
-module.exports = { userValidation, bookValidation, checkInputsPresent, isValidTitleA, isValidName, isvalidMobileNo, isValidEmail, isValidPassword, isValidTitle, isValidUserId, isvalidISBN,valid } //regForTitle,regForName,regForEmail,regForMobileNo,regForPassword,valid};
+module.exports = { userValidation, bookValidation, checkInputsPresent, isValidTitleA, isValidName, isvalidMobileNo, isValidEmail, isValidPassword, isValidTitle, isValidUserId, isvalidISBN,valid,isValidreleasedAt } //regForTitle,regForName,regForEmail,regForMobileNo,regForPassword,valid};
 
 
 // if (isEmailAlreadyUsed) {
