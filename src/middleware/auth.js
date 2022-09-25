@@ -33,6 +33,7 @@ const authorisation = async function (req, res, next) {
         // let decodedtoken = jwt.verify(token, "this is a private key")
 
         let toBeupdatedbookId = req.params.bookId
+        if(toBeupdatedbookId){
         if (!(/^[0-9a-fA-F]{24}$/).test(toBeupdatedbookId)) {
             return res.status(400).send({ status: false, message: "Please enter the valid book Id" })
         }
@@ -46,7 +47,7 @@ const authorisation = async function (req, res, next) {
             // let id = decodedtoken.userId
             let id = req.loggedInUser
             if (id != userId) return res.status(403).send({ status: false, msg: "You are not authorised to perform this task" })
-        }
+        }}
         else {
             toBeupdatedbookId = req.body.userId
             // let id = decodedtoken.userId
