@@ -95,14 +95,8 @@ const updateBookbyId = async function(req, res) {
 
         let { title, excerpt, releasedAt, ISBN } = req.body
             //=====================Checking the validation=====================//
-      //  if (!valid(bookId)) return res.status(400).send({ status: false, message: "Book Id is Invalid !!!!" })
-      const ValidId= isValidObjectId(bookId)
-      if(!ValidId){return res.status(400).send({status:false, message:"Book Id is Invalid"})}
+    
         if (Object.keys(req.body).length == 0) return res.status(400).send({ status: false, message: "please enter data in body" });
-
-        //===================== Checking Book Exsistance =====================//
-        let booksData = await bookModel.findOne({ _id: bookId, isDeleted: false })
-        if (!booksData) return res.status(404).send({ status: false, message: "No Books Found using BookID" })
 
         //=====================Validation of title=====================//
         if (title) {
@@ -137,36 +131,36 @@ const updateBookbyId = async function(req, res) {
     }
 };
 ////////////////////////////////////////Deleted Books//////////////////////////////////////////////////////////////////
+
 const deletebyId = async function(req, res) {
-
     try {
-        const bookId = req.params.bookId
-        if (!bookId) return res.status(400).send({
-            status: false,
-            message: "Enter a bookId"
-        })
-        let book = await bookModel.findById(bookId)
-        if (!book || book.isDeleted == true) {
-            return res.status(404).send({ status: false, message: "NO such book exist" })
+        let bookId = req.params.bookId;
+        if (!bookId) {
+            return res.status(400).send({ status: false, message: "bookId is required in path params" })
+        }
+       
 
-        };
-        // if (req.token.userId != book.userId) {
-        //     return res.status(403).send({ status: false, message: "Not Authorised" })
-        // }
+        let findBookId = await bookModel.findById({ _id: bookId })
+        if (!findBookId) {
+            return res.status(404).send({ status: false, msg: "Book Not found" })
+        }
 
-        let update = await bookModel.findOneAndUpdate({ _id: bookId }, {
-            isDeleted: true,
-            deletedAt: new Date()
-        })
-        return res.status(200).send({
-            status: true,
-            message: "Book deleted successfully",
-            data: update
-        })
+         if (findBookId.loggedInUser != req.userId) {
+            return res.status(403).send({ status: false, message: "You Are Not Unauthorized" });
+         }
+
+        let isDeletedBook = findBookId.isDeleted
+        if (isDeletedBook == true) {
+            return res.status(400).send({ status: false, msg: "Book is already deleted" })
+        } else {
+            const deleteBook = await bookModel.findOneAndUpdate({ _id: bookId }, { $set: { isDeleted: true, deletedAt: new Date() } }, { new: true })
+           let datadeleted=deleteBook.isDeleted
+           let deletedtime=deleteBook.deletedAt
+            return res.status(200).send({ status: true, message: "Book Deleted Successfully",isDeleted: datadeleted,deletedtime})
+        }
+
     } catch (error) {
-        return res.status(500).send({ message, message: error.message })
-
+        res.status(500).send({ status: false, message: error.message });
     }
 }
-
 module.exports = { createBooks, getAllBook, getBooksByPathParam, updateBookbyId, deletebyId };

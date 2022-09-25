@@ -33,6 +33,11 @@ const authorisation = async function (req, res, next) {
         // let decodedtoken = jwt.verify(token, "this is a private key")
 
         let toBeupdatedbookId = req.params.bookId
+        if (!(/^[0-9a-fA-F]{24}$/).test(toBeupdatedbookId)) {
+            return res.status(400).send({ status: false, message: "Please enter the valid book Id" })
+        }
+        let bookDetails= await bookModel.findOne({_id:toBeupdatedbookId,isDeleted:false})
+        if(!bookDetails){return res.status(404).send({status:false, msg:"book not found"})}
         if (toBeupdatedbookId) {
 
             let updatinguserId = await bookModel.findById({ _id: toBeupdatedbookId }).select({ userId: 1, _id: 0 })
