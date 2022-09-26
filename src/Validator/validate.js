@@ -56,7 +56,7 @@ const isValidEmail = function(value) {
 }
 
 const isValidPassword = function(Password) {
-    const passRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,16}$/
+    const passRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,15}$/
     return passRegex.test(Password)
 }
 
@@ -206,7 +206,7 @@ const bookValidation = function(req, res, next) {
 
 
 
-module.exports = { userValidation, bookValidation, checkInputsPresent, isValidTitleA, isValidName, isvalidMobileNo, isValidEmail, isValidPassword, isValidTitle, isValidUserId, isvalidISBN,valid,isValidreleasedAt } //regForTitle,regForName,regForEmail,regForMobileNo,regForPassword,valid};
+module.exports = { userValidation, bookValidation, checkInputsPresent, isValidTitleA, isValidName, isvalidMobileNo, isValidEmail, isValidPassword, isValidTitle, isValidUserId, isvalidISBN, valid, isValidreleasedAt } //regForTitle,regForName,regForEmail,regForMobileNo,regForPassword,valid};
 
 
 // if (isEmailAlreadyUsed) {
