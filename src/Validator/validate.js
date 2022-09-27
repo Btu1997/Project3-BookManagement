@@ -115,7 +115,7 @@ const userValidation = function(req, res, next) {
 
 
     if (!Title) {
-        return res.status(400).send({ status: false, message: "Enter valid Title" });
+        return res.status(400).send({ status: false, message: "Enter valid Title From [Mr./Mrs./Miss.]" });
     }
 
     // const isvalidname2 = function(value) {
@@ -130,7 +130,7 @@ const userValidation = function(req, res, next) {
     }
 
     if (!Phone) {
-        return res.status(400).send({ status: false, message: "Enter valid Phone" });
+        return res.status(400).send({ status: false, message: "Enter valid Phone Number" });
     }
     if (!Email) {
         return res.status(400).send({ status: false, message: "Enter valid Email" });

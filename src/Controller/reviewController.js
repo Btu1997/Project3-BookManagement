@@ -17,6 +17,7 @@ const createReview = async function (req, res) {
         if (id != bookId) { return res.status(400).send({ status: false, message: 'Please provide a valid book Id' }) }
         if(id == bookId){
             if (!bookId) { return res.status(400).send({ status: false, message: 'Please provide a valid Book Id' }) }
+           
             let Books = await bookModel.findById(bookId);
             if (!Books) { return res.status(400).send({ status: false, message: 'there is no such id in database, please provide a valid book Id' }) }
         }
@@ -44,13 +45,14 @@ const createReview = async function (req, res) {
             if(!validReview){return res.status(400).send({status:false,msg:"ReleasedAt should be Current Date and formate is yyyy-mm-dd"})}
         }
        
-        let updatedBook = await bookModel.findOneAndUpdate({ _id: id }, { $inc: { reviews: +1 } }, { new: true })
-        
+        let updatedBook = await bookModel.findOneAndUpdate({ _id:id }, { $inc: { reviews: +1 } }, { new: true })
+        data.bookId = id
         const reviews = await reviewModel.create(data);
         let obj ={}
-         obj = {updatedBook,reviews}
-        // updatedBook= updatedBook.toObject()
-        // updatedBook.review=reviews
+           obj = {updatedBook,reviews}
+        //   updatedBook= updatedBook.toObject()
+        //  updatedBook.review=reviews
+        //  updatedbook.bookId= updatedBook._id;
         //  let obj = updatedBook
         return res.status(201).send({ status: true, message: 'success', data: obj })
 
