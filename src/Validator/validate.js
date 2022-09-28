@@ -209,6 +209,4 @@ const bookValidation = function(req, res, next) {
 module.exports = { userValidation, bookValidation, checkInputsPresent, isValidTitleA, isValidName, isvalidMobileNo, isValidEmail, isValidPassword, isValidTitle, isValidUserId, isvalidISBN, valid, isValidreleasedAt } //regForTitle,regForName,regForEmail,regForMobileNo,regForPassword,valid};
 
 
-// if (isEmailAlreadyUsed) {
-//     return res.status(400).send({ status: false, message: `email address is already registered` })
-// }
+ 
