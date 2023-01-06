@@ -45,7 +45,7 @@ const getAllBook = async function(req, res) {
             if (queryParams.userId && !queryParams.userId.match(/^[0-9a-fA-F]{24}$/)) {
                 return res.status(400).send({ status: false, message: "Incorrect userId" })
             }
-            let findBooks = await bookModel.find({...queryParams, isDeleted: false }).select({ title: 1, excerpt: 1, userId: 1, category: 1, releasedAt: 1, reviews: 1, subcategory: 1 })
+            let findBooks = await bookModel.find({...queryParams, isDeleted: false }).select({ title: 1, excerpt: 1, userId: 1, category: 1, releasedAt: 1, reviews: 1})
 
             findBooks.sort(function(a, b) {
                 return a.title.localeCompare(b.title)
